@@ -17,8 +17,16 @@ async def test_project(dut):
     dut.uio_in.value = 0
     dut.rst_n.value = 0
     await ClockCycles(dut.clk, 10)
-    dut.rst_n.value = 1
+    dut.rst_n.value  = 1
+    await ClockCycles(dut.clk, 5)
 
+    # press button
+    dut.ui_in.value = 0b00000010
+    await ClockCycles(dut.clk, 1200)
+    dut.ui_in.value = 0
+    await ClockCycles(dut.clk, 50)
+
+    assert int(dut.ones.value) == 1, f"Expected ones=1, got {int(dut.ones.value)}"
     dut._log.info("Test passed")
 
     # Set the input values you want to test
